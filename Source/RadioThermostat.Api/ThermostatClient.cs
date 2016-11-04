@@ -16,6 +16,11 @@ namespace RadioThermostat.Api
         {
         }
 
+        public async Task<Sys> GetSys(CancellationToken ct)
+        {
+            return await this.GetAsync<Sys>("sys", ct);
+        }
+
         public async Task<TStat> GetTStat(CancellationToken ct)
         {
             return await this.GetAsync<TStat>("tstat", ct);
