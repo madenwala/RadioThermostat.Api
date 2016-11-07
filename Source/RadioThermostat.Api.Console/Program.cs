@@ -12,6 +12,8 @@ namespace RadioThermostat.Api.TestConsole
         static void Main(string[] args)
         {
             Work().Wait();
+
+            Console.ReadKey();
         }
 
         private static async Task Work()
@@ -24,6 +26,15 @@ namespace RadioThermostat.Api.TestConsole
 
             var tstat = await client.GetTStat(cts.Token);
             Console.WriteLine(tstat.Temp);
+
+            var model = await client.GetTStatModel(cts.Token);
+            Console.WriteLine(model.model);
+
+            var programHeat = await client.GetProgramHeat(cts.Token);
+            Console.WriteLine(programHeat.Day0);
+
+            var programCool = await client.GetProgramCool(cts.Token);
+            Console.WriteLine(programCool.Day0);
         }
     }
 }

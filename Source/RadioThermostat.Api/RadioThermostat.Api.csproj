@@ -38,7 +38,7 @@
     <Compile Include="ThermostatClient.cs" />
     <Compile Include="ClientBase.cs" />
     <Compile Include="Models\ModelBase.cs" />
-    <Compile Include="Models\TStat.cs" />
+    <Compile Include="Models\Models.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
