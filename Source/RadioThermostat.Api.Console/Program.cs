@@ -24,17 +24,25 @@ namespace RadioThermostat.Api.TestConsole
             var sys = await client.GetSys(cts.Token);
             Console.WriteLine(sys.ApiVersion);
 
-            var tstat = await client.GetTStat(cts.Token);
-            Console.WriteLine(tstat.Temp);
+            var tstat1 = await client.GetTStat(cts.Token);
+            Console.WriteLine(tstat1.ThermostatMode);
 
-            var model = await client.GetTStatModel(cts.Token);
-            Console.WriteLine(model.model);
+            var tstatNew = new Models.TStat();
+            tstatNew.ThermostatMode = Models.ThermostatModes.Heat;
+            var response = await client.PostTStat(tstatNew, cts.Token);
 
-            var programHeat = await client.GetProgramHeat(cts.Token);
-            Console.WriteLine(programHeat.Day0);
+            var tstat2 = await client.GetTStat(cts.Token);
+            Console.WriteLine(tstat2.ThermostatMode);
 
-            var programCool = await client.GetProgramCool(cts.Token);
-            Console.WriteLine(programCool.Day0);
+
+            //var model = await client.GetTStatModel(cts.Token);
+            //Console.WriteLine(model.model);
+
+            //var programHeat = await client.GetProgramHeat(cts.Token);
+            //Console.WriteLine(programHeat.Day0);
+
+            //var programCool = await client.GetProgramCool(cts.Token);
+            //Console.WriteLine(programCool.Day0);
         }
     }
 }
