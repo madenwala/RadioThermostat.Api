@@ -24,12 +24,12 @@ namespace RadioThermostat.Api.Models
                         dic.Add("tmode", (int)this.ThermostatMode);
                         break;
 
-                    case nameof(TemperatureHeat):
-                        dic.Add("t_heat", this.TemperatureHeat);
+                    case nameof(TargetHeat):
+                        dic.Add("t_heat", this.TargetHeat);
                         break;
 
-                    case nameof(TemperatureCool):
-                        dic.Add("t_cool", this.TemperatureCool);
+                    case nameof(TargetCool):
+                        dic.Add("t_cool", this.TargetCool);
                         break;
 
                     case nameof(Hold):
@@ -49,12 +49,12 @@ namespace RadioThermostat.Api.Models
             return dic;
         }
 
-        private double _Temp;
+        private double _currentTemp;
         [JsonProperty("temp")]
         public double CurrentTemperature
         {
-            get { return _Temp; }
-            set { this.SetProperty(ref _Temp, value); }
+            get { return _currentTemp; }
+            set { this.SetProperty(ref _currentTemp, value); }
         }
 
         private ThermostatModes _ThermostatMode;
@@ -89,20 +89,20 @@ namespace RadioThermostat.Api.Models
             set { this.SetProperty(ref _Hold, value); }
         }
 
-        private double _TCool;
+        private double _targetCool;
         [JsonProperty("t_cool")]
-        public double TemperatureCool
+        public double TargetCool
         {
-            get { return _TCool; }
-            set { this.SetProperty(ref _TCool, value); }
+            get { return _targetCool; }
+            set { this.SetProperty(ref _targetCool, value); }
         }
 
-        private double _THeat;
+        private double _targetHeat;
         [JsonProperty("t_heat")]
-        public double TemperatureHeat
+        public double TargetHeat
         {
-            get { return _THeat; }
-            set { this.SetProperty(ref _THeat, value); }
+            get { return _targetHeat; }
+            set { this.SetProperty(ref _targetHeat, value); }
         }
 
         private HvacOperatingStates _HvacOperatingStates;
@@ -180,18 +180,18 @@ namespace RadioThermostat.Api.Models
         Enabled = 1
     }
 
-    public enum FanOperatingModes
-    {
-        Auto = 0,
-        AutoCirculate = 1,
-        On = 2
-    }
-
     public enum HvacOperatingStates
     {
         Off = 0,
         Heat = 1,
         Cool = 2
+    }
+
+    public enum FanOperatingModes
+    {
+        Auto = 0,
+        AutoCirculate = 1,
+        On = 2
     }
 
     public enum FanOperatingStates

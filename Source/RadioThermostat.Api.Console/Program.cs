@@ -27,7 +27,7 @@ namespace RadioThermostat.Api.TestConsole
             Print(tstat1);
             
             tstat1.ThermostatMode = ThermostatModes.Heat;
-            tstat1.TemperatureHeat = 71;
+            tstat1.TargetHeat = 71;
             tstat1.FanOperatingMode = FanOperatingModes.Auto;
             tstat1.FanOperatingState = FanOperatingStates.Off;
 
@@ -43,8 +43,8 @@ namespace RadioThermostat.Api.TestConsole
             Console.WriteLine("Mode: " + tstat.ThermostatMode);
             Console.WriteLine("Fan: " + tstat.FanOperatingMode);
             Console.WriteLine("Current Temp: " + tstat.CurrentTemperature);
-            Console.WriteLine("Target Heat: " + tstat.TemperatureHeat);
-            Console.WriteLine("Target Cool: " + tstat.TemperatureCool);
+            Console.WriteLine("Target Heat: " + tstat.TargetHeat);
+            Console.WriteLine("Target Cool: " + tstat.TargetCool);
             Console.WriteLine("Time: " + tstat.Time);
             Console.WriteLine("***********************************************");
         }
