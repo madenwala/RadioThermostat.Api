@@ -1,13 +1,8 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RadioThermostat.Api.Models
 {
-    public sealed class Sys : ModelBase
+    public sealed class Sys
     {
         [JsonProperty("uuid")]
         public string Uuid { get; set; }

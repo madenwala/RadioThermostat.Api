@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -7,17 +8,19 @@ using System.Runtime.CompilerServices;
 namespace RadioThermostat.Api.Models
 {
     /// <summary>
-    /// Interface that all model objects should implement.
-    /// </summary>
-    public interface IModel
-    {
-    }
-
-    /// <summary>
     /// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.
     /// </summary>
-    public abstract class ModelBase : INotifyPropertyChanged, IModel
+    public abstract class ModelBase : INotifyPropertyChanged
     {
+        protected List<string> _changedProperties = new List<string>();
+
+        internal void ClearPropertiesChangedList()
+        {
+            _changedProperties.Clear();
+        }
+
+        internal abstract Dictionary<string, object> GetChangedProperties();
+
         #region Events
 
         /// <summary>
@@ -64,6 +67,8 @@ namespace RadioThermostat.Api.Models
         protected internal void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if(_changedProperties.Contains(propertyName) == false)
+                _changedProperties.Add(propertyName);
         }
 
         /// <summary>
@@ -85,7 +90,7 @@ namespace RadioThermostat.Api.Models
         /// <returns>String value representing the property name.</returns>
         private string GetPropertyName<T>(Expression<Func<T>> property)
         {
-            MemberExpression memberExpression = GetMememberExpression<T>(property);
+            MemberExpression memberExpression = this.GetMememberExpression<T>(property);
             return memberExpression.Member.Name;
         }
 
