@@ -32,14 +32,14 @@ namespace RadioThermostat.Api
             return await this.GetAsync<Network>("sys/network", ct);
         }
 
-        public async Task<TStat> GetThermostatStatus(CancellationToken ct)
+        public async Task<ThermostatStatus> GetThermostatStatus(CancellationToken ct)
         {
-            var response = await this.GetAsync<TStat>("tstat", ct);
+            var response = await this.GetAsync<ThermostatStatus>("tstat", ct);
             response.ClearPropertiesChangedList();
             return response;
         }
 
-        public async Task<TStat> SetThermostatStatus(TStat tstat, CancellationToken ct)
+        public async Task<ThermostatStatus> SetThermostatStatus(ThermostatStatus tstat, CancellationToken ct)
         {
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(tstat.GetChangedProperties());
             var content = new StringContent(json, Encoding.UTF8);
@@ -47,14 +47,14 @@ namespace RadioThermostat.Api
             return await this.GetThermostatStatus(ct);
         }
 
-        public async Task<ThermostatProgram> GetProgramHeat(CancellationToken ct)
+        public async Task<ProgramModel> GetProgramHeat(CancellationToken ct)
         {
-            return await this.GetAsync<ThermostatProgram>("tstat/program/heat", ct);
+            return await this.GetAsync<ProgramModel>("tstat/program/heat", ct);
         }
 
-        public async Task<ThermostatProgram> GetProgramCool(CancellationToken ct)
+        public async Task<ProgramModel> GetProgramCool(CancellationToken ct)
         {
-            return await this.GetAsync<ThermostatProgram>("tstat/program/cool", ct);
+            return await this.GetAsync<ProgramModel>("tstat/program/cool", ct);
         }
 
         //public async Task<RemoteTemperature> GetRemoteTemperature(CancellationToken ct)

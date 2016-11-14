@@ -34,7 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models\ProgramModel.cs" />
     <Compile Include="Models\Sys.cs" />
+    <Compile Include="Models\TimeModel.cs" />
     <Compile Include="Models\TStat.cs" />
     <Compile Include="ThermostatClient.cs" />
     <Compile Include="ClientBase.cs" />

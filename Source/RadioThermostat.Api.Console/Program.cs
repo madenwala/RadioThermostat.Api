@@ -38,7 +38,7 @@ namespace RadioThermostat.Api.TestConsole
             Print(await client.GetProgramCool(cts.Token));
         }
 
-        private static void Print(TStat tstat)
+        private static void Print(ThermostatStatus tstat)
         {
             Console.WriteLine("Mode: " + tstat.ThermostatMode);
             Console.WriteLine("Fan: " + tstat.FanOperatingMode);
@@ -75,15 +75,15 @@ namespace RadioThermostat.Api.TestConsole
             Console.WriteLine("***********************************************");
         }
 
-        private static void Print(ThermostatProgram p)
+        private static void Print(ProgramModel p)
         {
-            Console.WriteLine("Day0: " + string.Join(",", p.Day0));
-            Console.WriteLine("Day1: " + string.Join(",", p.Day1));
-            Console.WriteLine("Day2: " + string.Join(",", p.Day2));
-            Console.WriteLine("Day3: " + string.Join(",", p.Day3));
-            Console.WriteLine("Day4: " + string.Join(",", p.Day4));
-            Console.WriteLine("Day5: " + string.Join(",", p.Day5));
-            Console.WriteLine("Day6: " + string.Join(",", p.Day6));
+            Console.WriteLine("Monday: " + string.Join(",", p.Monday));
+            Console.WriteLine("Tuesday: " + string.Join(",", p.Tuesday));
+            Console.WriteLine("Wednesday: " + string.Join(",", p.Wednesday));
+            Console.WriteLine("Thursday: " + string.Join(",", p.Thursday));
+            Console.WriteLine("Friday: " + string.Join(",", p.Friday));
+            Console.WriteLine("Saturday: " + string.Join(",", p.Saturday));
+            Console.WriteLine("Sunday: " + string.Join(",", p.Sunday));
             Console.WriteLine("***********************************************");
         }
     }

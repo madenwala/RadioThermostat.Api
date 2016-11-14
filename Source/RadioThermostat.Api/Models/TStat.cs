@@ -10,7 +10,7 @@ namespace RadioThermostat.Api.Models
         public bool Success { get; set; }
     }
 
-    public sealed class TStat : ModelBase
+    public sealed class ThermostatStatus : ModelBase
     {
         internal override Dictionary<string, object> GetChangedProperties()
         {
@@ -136,34 +136,6 @@ namespace RadioThermostat.Api.Models
             get { return _TTypePost; }
             set { this.SetProperty(ref _TTypePost, value); }
         }
-    }
-
-    public class Time
-    {
-        [JsonProperty("day")]
-        public Days Day { get; set; }
-
-        [JsonProperty("hour")]
-        public int Hour { get; set; }
-
-        [JsonProperty("minute")]
-        public int Minute { get; set; }
-
-        public override string ToString()
-        {
-            return string.Format("{0} {1:00}:{2:00}", Day, Hour, Minute);
-        }
-    }
-
-    public enum Days
-    {
-        Monday = 0,
-        Tuesday,
-        Wednesday,
-        Thursday,
-        Friday,
-        Saturday,
-        Sunday
     }
 
     public enum ThermostatModes
