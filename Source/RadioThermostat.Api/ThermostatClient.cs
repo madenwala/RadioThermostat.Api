@@ -57,6 +57,11 @@ namespace RadioThermostat.Api
             return await this.GetAsync<ProgramModel>("tstat/program/cool", ct);
         }
 
+        public async Task<ThermostatName> GetName(CancellationToken ct)
+        {
+            return await this.GetAsync<ThermostatName>("/sys/name", ct);
+        }
+
         //public async Task<RemoteTemperature> GetRemoteTemperature(CancellationToken ct)
         //{
         //    return await this.GetAsync<RemoteTemperature>("tstat/remote_temp", ct);

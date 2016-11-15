@@ -19,6 +19,7 @@ namespace RadioThermostat.Api.TestConsole
             CancellationTokenSource cts = new CancellationTokenSource();
             var client = new ThermostatClient("192.168.1.101");
 
+            Print(await client.GetName(cts.Token));
             Print(await client.GetModelInfo(cts.Token));
             Print(await client.GetSystemInfo(cts.Token));
             Print(await client.GetNetworkInfo(cts.Token));
@@ -31,8 +32,8 @@ namespace RadioThermostat.Api.TestConsole
             tstat1.FanOperatingMode = FanOperatingModes.Auto;
             tstat1.FanOperatingState = FanOperatingStates.Off;
 
-            var tstat2 = await client.SetThermostatStatus(tstat1, cts.Token);
-            Print(tstat2);
+            //var tstat2 = await client.SetThermostatStatus(tstat1, cts.Token);
+            //Print(tstat2);
             
             Print(await client.GetProgramHeat(cts.Token));
             Print(await client.GetProgramCool(cts.Token));
@@ -84,6 +85,12 @@ namespace RadioThermostat.Api.TestConsole
             Console.WriteLine("Friday: " + string.Join(",", p.Friday));
             Console.WriteLine("Saturday: " + string.Join(",", p.Saturday));
             Console.WriteLine("Sunday: " + string.Join(",", p.Sunday));
+            Console.WriteLine("***********************************************");
+        }
+
+        private static void Print(ThermostatName n)
+        {
+            Console.WriteLine("Name: " + n.Name);
             Console.WriteLine("***********************************************");
         }
     }

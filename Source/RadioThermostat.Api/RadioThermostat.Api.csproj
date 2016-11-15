@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="Models\ProgramModel.cs" />
     <Compile Include="Models\Sys.cs" />
+    <Compile Include="Models\ThermostatName.cs" />
     <Compile Include="Models\TimeModel.cs" />
     <Compile Include="Models\TStat.cs" />
     <Compile Include="ThermostatClient.cs" />
@@ -59,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="CreatePackage.cmd" />
     <None Include="packages.config" />
     <None Include="RadioThermostat.Api.nuspec">
       <SubType>Designer</SubType>
