@@ -2,8 +2,10 @@
 
 namespace RadioThermostat.Api.Models
 {
-    public sealed class Sys
+    public sealed class SystemInfo
     {
+        #region Properties
+
         [JsonProperty("uuid")]
         public string Uuid { get; set; }
 
@@ -15,5 +17,7 @@ namespace RadioThermostat.Api.Models
 
         [JsonProperty("wlan_fw_version")]
         public string WlanFwVersion { get; set; }
+
+        #endregion
     }
 }

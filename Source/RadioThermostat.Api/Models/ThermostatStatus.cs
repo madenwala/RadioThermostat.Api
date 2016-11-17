@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace RadioThermostat.Api.Models
@@ -12,42 +11,7 @@ namespace RadioThermostat.Api.Models
 
     public sealed class ThermostatStatus : ModelBase
     {
-        internal override Dictionary<string, object> GetChangedProperties()
-        {
-            var dic = new Dictionary<string, object>();
-
-            foreach(var property in _changedProperties)
-            {
-                switch(property)
-                {
-                    case nameof(Mode):
-                        dic.Add("tmode", (int)this.Mode);
-                        break;
-
-                    case nameof(TargetHeat):
-                        dic.Add("t_heat", this.TargetHeat);
-                        break;
-
-                    case nameof(TargetCool):
-                        dic.Add("t_cool", this.TargetCool);
-                        break;
-
-                    case nameof(Hold):
-                        dic.Add("hold", this.Hold ? 1 : 0);
-                        break;
-
-                    case nameof(FanOperatingMode):
-                        dic.Add("fmode", (int)this.FanOperatingMode);
-                        break;
-
-                    case nameof(FanOperatingState):
-                        dic.Add("fstate", this.FanOperatingState ? 1 : 0);
-                        break;
-                }
-            }
-
-            return dic;
-        }
+        #region Properties
 
         private double _currentTemp;
         [JsonProperty("temp")]
@@ -162,6 +126,49 @@ namespace RadioThermostat.Api.Models
         public bool IsFanAuto { get { return this.FanOperatingMode == FanOperatingModes.Auto; } set { if (value) this.FanOperatingMode = FanOperatingModes.Auto; } }
         public bool IsFanAutoCirculate { get { return this.FanOperatingMode == FanOperatingModes.AutoCirculate; } set { if (value) this.FanOperatingMode = FanOperatingModes.AutoCirculate; } }
         public bool IsFanOn { get { return this.FanOperatingMode == FanOperatingModes.On; } set { if (value) this.FanOperatingMode = FanOperatingModes.On; } }
+
+        #endregion
+
+        #region Methods
+
+        internal override Dictionary<string, object> GetChangedProperties()
+        {
+            var dic = new Dictionary<string, object>();
+
+            foreach (var property in _changedProperties)
+            {
+                switch (property)
+                {
+                    case nameof(Mode):
+                        dic.Add("tmode", (int)this.Mode);
+                        break;
+
+                    case nameof(TargetHeat):
+                        dic.Add("t_heat", this.TargetHeat);
+                        break;
+
+                    case nameof(TargetCool):
+                        dic.Add("t_cool", this.TargetCool);
+                        break;
+
+                    case nameof(Hold):
+                        dic.Add("hold", this.Hold ? 1 : 0);
+                        break;
+
+                    case nameof(FanOperatingMode):
+                        dic.Add("fmode", (int)this.FanOperatingMode);
+                        break;
+
+                    case nameof(FanOperatingState):
+                        dic.Add("fstate", this.FanOperatingState ? 1 : 0);
+                        break;
+                }
+            }
+
+            return dic;
+        }
+
+        #endregion
     }
 
     #region Enums

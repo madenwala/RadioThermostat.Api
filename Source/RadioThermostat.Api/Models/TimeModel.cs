@@ -1,20 +1,23 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RadioThermostat.Api.Models
 {
     public class Time : ModelBase
     {
+        #region Properties
+
         private Days _Day;
         [JsonProperty("day")]
         public Days Day
         {
             get { return _Day; }
-            set { this.SetProperty(ref _Day, value); }
+            set
+            {
+                if(this.SetProperty(ref _Day, value))
+                    this.NotifyPropertyChanged(()=>this.TotalMinutes);
+            }
         }
 
         private int _Hour;
@@ -22,7 +25,11 @@ namespace RadioThermostat.Api.Models
         public int Hour
         {
             get { return _Hour; }
-            set { this.SetProperty(ref _Hour, value); }
+            set
+            {
+                if (this.SetProperty(ref _Hour, value))
+                    this.NotifyPropertyChanged(() => this.TotalMinutes);
+            }
         }
 
         private int _Minute;
@@ -43,6 +50,10 @@ namespace RadioThermostat.Api.Models
             }
         }
 
+        #endregion
+
+        #region Constructors
+
         public Time()
         {
         }
@@ -53,6 +64,10 @@ namespace RadioThermostat.Api.Models
             this.TotalMinutes = totalMinutes;
         }
 
+        #endregion
+
+        #region Methods
+
         public override string ToString()
         {
             return string.Format("{0} {1:00}:{2:00}", Day, Hour, Minute);
@@ -62,7 +77,18 @@ namespace RadioThermostat.Api.Models
         {
             throw new NotImplementedException();
         }
+
+        public DateTime AsDateTime()
+        {
+            var dt = DateTime.Today;
+            dt.AddMinutes(this.TotalMinutes);
+            return dt;
+        }
+
+        #endregion
     }
+
+    #region Enums
 
     public enum Days
     {
@@ -74,4 +100,6 @@ namespace RadioThermostat.Api.Models
         Saturday,
         Sunday
     }
+
+    #endregion
 }

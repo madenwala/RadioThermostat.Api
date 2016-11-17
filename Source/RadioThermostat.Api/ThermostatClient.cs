@@ -22,9 +22,9 @@ namespace RadioThermostat.Api
             return await this.GetAsync<ThermostatModel>("tstat/model", ct);
         }
 
-        public async Task<Sys> GetSystemInfo(CancellationToken ct)
+        public async Task<SystemInfo> GetSystemInfo(CancellationToken ct)
         {
-            return await this.GetAsync<Sys>("sys", ct);
+            return await this.GetAsync<SystemInfo>("sys", ct);
         }
 
         public async Task<Network> GetNetworkInfo(CancellationToken ct)
@@ -44,6 +44,10 @@ namespace RadioThermostat.Api
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(tstat.GetChangedProperties());
             var content = new StringContent(json, Encoding.UTF8);
             var response = await this.PostAsync<ThermostatResponse>("tstat", ct, content);
+
+            if (tstat.Mode == ThermostatModes.Off)
+                await Task.Delay(1000);
+
             return await this.GetThermostatStatus(ct);
         }
 

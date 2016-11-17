@@ -12,16 +12,9 @@ namespace RadioThermostat.Api.Models
     /// </summary>
     public abstract class ModelBase : INotifyPropertyChanged
     {
+        #region Variables & Events
+
         protected List<string> _changedProperties = new List<string>();
-
-        internal void ClearPropertiesChangedList()
-        {
-            _changedProperties.Clear();
-        }
-
-        internal abstract Dictionary<string, object> GetChangedProperties();
-
-        #region Events
 
         /// <summary>
         /// Multicast event for property change notifications.
@@ -31,6 +24,15 @@ namespace RadioThermostat.Api.Models
         #endregion
 
         #region Methods
+
+        internal void ClearPropertiesChangedList()
+        {
+            _changedProperties.Clear();
+        }
+
+        internal abstract Dictionary<string, object> GetChangedProperties();
+
+        #region Data Binding
 
         /// <summary>
         /// Checks if a property already matches a desired value.  Sets the property and
@@ -143,6 +145,8 @@ namespace RadioThermostat.Api.Models
         //    if (pi != null && pi.CanWrite)
         //        pi.SetValue(this, value, null);
         //}
+
+        #endregion
 
         #endregion
     }

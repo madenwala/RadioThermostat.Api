@@ -27,14 +27,14 @@ namespace RadioThermostat.Api.TestConsole
             var tstat1 = await client.GetThermostatStatus(cts.Token);
             Print(tstat1);
             
-            tstat1.Mode = ThermostatModes.Heat;
+            tstat1.Mode = ThermostatModes.Off;
             tstat1.TargetHeat = 71;
             tstat1.FanOperatingMode = FanOperatingModes.Auto;
             tstat1.FanOperatingState = false;
 
-            //var tstat2 = await client.SetThermostatStatus(tstat1, cts.Token);
-            //Print(tstat2);
-            
+            var tstat2 = await client.SetThermostatStatus(tstat1, cts.Token);
+            Print(tstat2);
+
             Print(await client.GetProgramHeat(cts.Token));
             Print(await client.GetProgramCool(cts.Token));
         }
@@ -61,7 +61,7 @@ namespace RadioThermostat.Api.TestConsole
             Console.WriteLine("***********************************************");
         }
 
-        private static void Print(Sys sys)
+        private static void Print(SystemInfo sys)
         {
             Console.WriteLine("ApiVersion: " + sys.ApiVersion);
             Console.WriteLine("FwVersion: " + sys.FwVersion);
