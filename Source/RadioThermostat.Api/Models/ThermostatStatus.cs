@@ -20,8 +20,8 @@ namespace RadioThermostat.Api.Models
             {
                 switch(property)
                 {
-                    case nameof(ThermostatMode):
-                        dic.Add("tmode", (int)this.ThermostatMode);
+                    case nameof(Mode):
+                        dic.Add("tmode", (int)this.Mode);
                         break;
 
                     case nameof(TargetHeat):
@@ -41,7 +41,7 @@ namespace RadioThermostat.Api.Models
                         break;
 
                     case nameof(FanOperatingState):
-                        dic.Add("fstate", (int)this.FanOperatingState);
+                        dic.Add("fstate", this.FanOperatingState ? 1 : 0);
                         break;
                 }
             }
@@ -57,12 +57,21 @@ namespace RadioThermostat.Api.Models
             set { this.SetProperty(ref _currentTemp, value); }
         }
 
-        private ThermostatModes _ThermostatMode;
+        private ThermostatModes _mode;
         [JsonProperty("tmode")]
-        public ThermostatModes ThermostatMode
+        public ThermostatModes Mode
         {
-            get { return _ThermostatMode; }
-            set { this.SetProperty(ref _ThermostatMode, value); }
+            get { return _mode; }
+            set
+            {
+                if(this.SetProperty(ref _mode, value))
+                {
+                    this.NotifyPropertyChanged(() => this.IsModeOff);
+                    this.NotifyPropertyChanged(() => this.IsModeHeat);
+                    this.NotifyPropertyChanged(() => this.IsModeCool);
+                    this.NotifyPropertyChanged(() => this.IsModeAuto);
+                }
+            }
         }
 
         private FanOperatingModes _FanOperatingMode;
@@ -70,12 +79,20 @@ namespace RadioThermostat.Api.Models
         public FanOperatingModes FanOperatingMode
         {
             get { return _FanOperatingMode; }
-            set { this.SetProperty(ref _FanOperatingMode, value); }
+            set
+            {
+                if(this.SetProperty(ref _FanOperatingMode, value))
+                {
+                    this.NotifyPropertyChanged(() => this.IsFanAuto);
+                    this.NotifyPropertyChanged(() => this.IsFanAutoCirculate);
+                    this.NotifyPropertyChanged(() => this.IsFanOn);
+                }
+            }
         }
 
-        private Overrides _Override;
+        private bool _Override;
         [JsonProperty("override")]
-        public Overrides @Override
+        public bool @Override
         {
             get { return _Override; }
             set { this.SetProperty(ref _Override, value); }
@@ -113,9 +130,9 @@ namespace RadioThermostat.Api.Models
             set { this.SetProperty(ref _HvacOperatingStates, value); }
         }
 
-        private FanOperatingStates _FanOperatingStates;
+        private bool _FanOperatingStates;
         [JsonProperty("fstate")]
-        public FanOperatingStates FanOperatingState
+        public bool FanOperatingState
         {
             get { return _FanOperatingStates; }
             set { this.SetProperty(ref _FanOperatingStates, value); }
@@ -136,7 +153,18 @@ namespace RadioThermostat.Api.Models
             get { return _TTypePost; }
             set { this.SetProperty(ref _TTypePost, value); }
         }
+
+        public bool IsModeOff { get { return this.Mode == ThermostatModes.Off; } set { if (value) this.Mode = ThermostatModes.Off; } }
+        public bool IsModeHeat { get { return this.Mode == ThermostatModes.Heat; } set { if (value) this.Mode = ThermostatModes.Heat; } }
+        public bool IsModeCool { get { return this.Mode == ThermostatModes.Cool; } set { if (value) this.Mode = ThermostatModes.Cool; } }
+        public bool IsModeAuto { get { return this.Mode == ThermostatModes.Auto; } set { if (value) this.Mode = ThermostatModes.Auto; } }
+
+        public bool IsFanAuto { get { return this.FanOperatingMode == FanOperatingModes.Auto; } set { if (value) this.FanOperatingMode = FanOperatingModes.Auto; } }
+        public bool IsFanAutoCirculate { get { return this.FanOperatingMode == FanOperatingModes.AutoCirculate; } set { if (value) this.FanOperatingMode = FanOperatingModes.AutoCirculate; } }
+        public bool IsFanOn { get { return this.FanOperatingMode == FanOperatingModes.On; } set { if (value) this.FanOperatingMode = FanOperatingModes.On; } }
     }
+
+    #region Enums
 
     public enum ThermostatModes
     {
@@ -144,12 +172,6 @@ namespace RadioThermostat.Api.Models
         Heat = 1,
         Cool = 2,
         Auto = 3
-    }
-
-    public enum Overrides
-    {
-        Disabled = 0,
-        Enabled = 1
     }
 
     public enum HvacOperatingStates
@@ -166,16 +188,12 @@ namespace RadioThermostat.Api.Models
         On = 2
     }
 
-    public enum FanOperatingStates
-    {
-        Off = 0,
-        On = 1
-    }
-
     public enum TTypePosts
     {
         TemporaryTarget = 0,
         AbsoluteTarget = 1,
         Unknown = 2
     }
+
+    #endregion
 }

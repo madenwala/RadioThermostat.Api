@@ -38,7 +38,7 @@
     <Compile Include="Models\Sys.cs" />
     <Compile Include="Models\ThermostatName.cs" />
     <Compile Include="Models\TimeModel.cs" />
-    <Compile Include="Models\TStat.cs" />
+    <Compile Include="Models\ThermostatStatus.cs" />
     <Compile Include="ThermostatClient.cs" />
     <Compile Include="ClientBase.cs" />
     <Compile Include="Models\ModelBase.cs" />
