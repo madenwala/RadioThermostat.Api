@@ -17,26 +17,26 @@ namespace RadioThermostat.Api.TestConsole
         private static async Task Work()
         {
             CancellationTokenSource cts = new CancellationTokenSource();
-            var client = new ThermostatClient("192.168.1.101");
+            var client = new ThermostatClient("24.1.143.169:101");
 
-            Print(await client.GetName(cts.Token));
-            Print(await client.GetModelInfo(cts.Token));
-            Print(await client.GetSystemInfo(cts.Token));
-            Print(await client.GetNetworkInfo(cts.Token));
+            //Print(await client.GetName(cts.Token));
+            //Print(await client.GetModelInfo(cts.Token));
+            //Print(await client.GetSystemInfo(cts.Token));
+            //Print(await client.GetNetworkInfo(cts.Token));
 
             var tstat1 = await client.GetThermostatStatus(cts.Token);
             Print(tstat1);
             
-            tstat1.Mode = ThermostatModes.Off;
-            tstat1.TargetHeat = 71;
-            tstat1.FanOperatingMode = FanOperatingModes.Auto;
-            tstat1.FanOperatingState = false;
+            //tstat1.Mode = ThermostatModes.Off;
+            //tstat1.TargetTemporatureHeat = 71;
+            //tstat1.FanOperatingMode = FanOperatingModes.Auto;
+            //tstat1.FanOperatingState = false;
 
-            var tstat2 = await client.SetThermostatStatus(tstat1, cts.Token);
-            Print(tstat2);
+            //var tstat2 = await client.SetThermostatStatus(tstat1, cts.Token);
+            //Print(tstat2);
 
-            Print(await client.GetProgramHeat(cts.Token));
-            Print(await client.GetProgramCool(cts.Token));
+            //Print(await client.GetProgramHeat(cts.Token));
+            //Print(await client.GetProgramCool(cts.Token));
         }
 
         private static void Print(ThermostatStatus tstat)
@@ -44,8 +44,8 @@ namespace RadioThermostat.Api.TestConsole
             Console.WriteLine("Mode: " + tstat.Mode);
             Console.WriteLine("Fan: " + tstat.FanOperatingMode);
             Console.WriteLine("Current Temp: " + tstat.CurrentTemperature);
-            Console.WriteLine("Target Heat: " + tstat.TargetHeat);
-            Console.WriteLine("Target Cool: " + tstat.TargetCool);
+            Console.WriteLine("Target Heat: " + tstat.TargetTemperatureHeat);
+            Console.WriteLine("Target Cool: " + tstat.TargetTemperatureCool);
             Console.WriteLine("Time: " + tstat.Time);
             Console.WriteLine("***********************************************");
         }

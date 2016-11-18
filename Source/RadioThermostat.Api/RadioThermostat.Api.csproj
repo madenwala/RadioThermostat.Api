@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models\ILogger.cs" />
     <Compile Include="Models\ProgramModel.cs" />
     <Compile Include="Models\Sys.cs" />
     <Compile Include="Models\ThermostatName.cs" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RadioThermostat.Api.Models;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,14 +23,17 @@ namespace RadioThermostat.Api
         public const int E_WINHTTP_CANNOT_CONNECT = unchecked((int)0x80072efd);
         public const int E_WINHTTP_CONNECTION_ERROR = unchecked((int)0x80072efe);
 
+        private ILogger _logger;
+
         #endregion
 
         #region Constructors
 
-        public ClientApiBase(string baseURL = null, bool disableCaching = false)
+        public ClientApiBase(string baseURL = null, bool disableCaching = false, ILogger logger = null)
         {
             this.BaseUri = new Uri(baseURL);
             this.Client = new HttpClient();
+            _logger = logger;
         }
 
         public void Dispose()
@@ -59,6 +63,7 @@ namespace RadioThermostat.Api
                 throw new ArgumentNullException(nameof(url));
 
             var response = await this.Client.GetAsync(new Uri(this.BaseUri, url), ct);
+            this.Log(response);
             response.EnsureSuccessStatusCode();
             var data = await response.Content.ReadAsStringAsync();
             return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(data);
@@ -90,7 +95,8 @@ namespace RadioThermostat.Api
         protected async Task<string> PostAsync(string url, CancellationToken ct, HttpContent contents = default(HttpContent))
         {
             HttpResponseMessage response = await this.PostAsync(url, contents, ct);
-            return await response.Content?.ReadAsStringAsync();
+            var data = await response.Content?.ReadAsStringAsync();
+            return data;
         }
 
         /// <summary>
@@ -107,8 +113,70 @@ namespace RadioThermostat.Api
                 throw new ArgumentNullException(nameof(url));
 
             var response = await this.Client.PostAsync(new Uri(this.BaseUri, url), contents, ct);
+            this.Log(response);
             response.EnsureSuccessStatusCode();
             return response;
+        }
+
+        #endregion
+
+        #region Logging
+
+        private void Log(string message)
+        {
+            if (_logger != null)
+                _logger.Log(message);
+        }
+
+        /// <summary>
+        /// Logs HttpRequest information to the application logger.
+        /// </summary>
+        /// <param name="request">Request to log.</param>
+        private void Log(HttpRequestMessage request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            var message = string.Format(
+                Environment.NewLine + "---------------------------------" + Environment.NewLine +
+                "WEB REQUEST to {0}" + Environment.NewLine +
+                "-Method: {1}" + Environment.NewLine +
+                "-Headers: {2}" + Environment.NewLine +
+                "-Contents: " + Environment.NewLine + "{3}" + Environment.NewLine +
+                "---------------------------------",
+                request.RequestUri.OriginalString,
+                request.Method.Method,
+                request.Headers?.ToString(),
+                request.Content?.ReadAsStringAsync().Result
+            );
+            this.Log(message);
+        }
+
+        /// <summary>
+        /// Logs the HttpResponse object to the application logger.
+        /// </summary>
+        /// <param name="response">Response to log.</param>
+        private void Log(HttpResponseMessage response)
+        {
+            if (response == null)
+                throw new ArgumentNullException(nameof(response));
+            
+            this.Log(response.RequestMessage);
+            var message = string.Format(
+                Environment.NewLine + "---------------------------------" + Environment.NewLine +
+                "WEB RESPONSE to {0}" + Environment.NewLine +
+                "-HttpStatus: {1}" + Environment.NewLine +
+                "-Reason Phrase: {2}" + Environment.NewLine +
+                "-ContentLength: {3:0.00 KB}" + Environment.NewLine +
+                "-Contents: " + Environment.NewLine + "{4}" + Environment.NewLine +
+                "---------------------------------",
+                response.RequestMessage.RequestUri.OriginalString,
+                string.Format("{0} {1}", (int)response.StatusCode, response.StatusCode.ToString()),
+                response.ReasonPhrase,
+                Convert.ToDecimal(Convert.ToDouble(response.Content.Headers.ContentLength) / 1024),
+                response.Content?.ReadAsStringAsync().Result
+                );
+            this.Log(message);
         }
 
         #endregion

@@ -34,6 +34,7 @@ namespace RadioThermostat.Api.Models
                     this.NotifyPropertyChanged(() => this.IsModeHeat);
                     this.NotifyPropertyChanged(() => this.IsModeCool);
                     this.NotifyPropertyChanged(() => this.IsModeAuto);
+                    this.NotifyPropertyChanged(() => this.TargetTemperature);
                 }
             }
         }
@@ -72,18 +73,26 @@ namespace RadioThermostat.Api.Models
 
         private double _targetCool;
         [JsonProperty("t_cool")]
-        public double TargetCool
+        public double TargetTemperatureCool
         {
             get { return _targetCool; }
-            set { this.SetProperty(ref _targetCool, value); }
+            set
+            {
+                if (this.SetProperty(ref _targetCool, value))
+                    this.NotifyPropertyChanged(() => this.TargetTemperature);
+            }
         }
 
         private double _targetHeat;
         [JsonProperty("t_heat")]
-        public double TargetHeat
+        public double TargetTemperatureHeat
         {
             get { return _targetHeat; }
-            set { this.SetProperty(ref _targetHeat, value); }
+            set
+            {
+                if (this.SetProperty(ref _targetHeat, value))
+                    this.NotifyPropertyChanged(() => this.TargetTemperature);
+            }
         }
 
         private HvacOperatingStates _HvacOperatingStates;
@@ -110,13 +119,13 @@ namespace RadioThermostat.Api.Models
             set { this.SetProperty(ref _Time, value); }
         }
 
-        private TTypePosts _TTypePost;
-        [JsonProperty("t_type_post")]
-        public TTypePosts TTypePost
-        {
-            get { return _TTypePost; }
-            set { this.SetProperty(ref _TTypePost, value); }
-        }
+        //private TTypePosts _TTypePost;
+        //[JsonProperty("t_type_post")]
+        //public TTypePosts TTypePost
+        //{
+        //    get { return _TTypePost; }
+        //    set { this.SetProperty(ref _TTypePost, value); }
+        //}
 
         public bool IsModeOff { get { return this.Mode == ThermostatModes.Off; } set { if (value) this.Mode = ThermostatModes.Off; } }
         public bool IsModeHeat { get { return this.Mode == ThermostatModes.Heat; } set { if (value) this.Mode = ThermostatModes.Heat; } }
@@ -128,6 +137,47 @@ namespace RadioThermostat.Api.Models
         public bool IsFanOn { get { return this.FanOperatingMode == FanOperatingModes.On; } set { if (value) this.FanOperatingMode = FanOperatingModes.On; } }
 
         #endregion
+        
+        public double TargetTemperature
+        {
+            get
+            {
+                switch(this.Mode)
+                {
+                    case ThermostatModes.Heat:
+                        return this.TargetTemperatureHeat;
+                    case ThermostatModes.Cool:
+                        return this.TargetTemperatureCool;
+                    case ThermostatModes.Auto:
+                        if (this.HvacOperatingStates == HvacOperatingStates.Heat)
+                            return this.TargetTemperatureHeat;
+                        else if (this.HvacOperatingStates == HvacOperatingStates.Cool)
+                            return this.TargetTemperatureCool;
+                        else
+                            return 0;
+                    default:
+                        return 0;
+                }
+            }
+            set
+            {
+                switch (this.Mode)
+                {
+                    case ThermostatModes.Heat:
+                        this.TargetTemperatureHeat = value;
+                        break;
+
+                    case ThermostatModes.Cool:
+                        this.TargetTemperatureCool = value;
+                        break;
+
+                    case ThermostatModes.Auto:
+                        this.TargetTemperatureCool = value;
+                        this.TargetTemperatureHeat = value;
+                        break;
+                }
+            }
+        }
 
         #region Methods
 
@@ -143,12 +193,12 @@ namespace RadioThermostat.Api.Models
                         dic.Add("tmode", (int)this.Mode);
                         break;
 
-                    case nameof(TargetHeat):
-                        dic.Add("t_heat", this.TargetHeat);
+                    case nameof(TargetTemperatureHeat):
+                        dic.Add("t_heat", this.TargetTemperatureHeat);
                         break;
 
-                    case nameof(TargetCool):
-                        dic.Add("t_cool", this.TargetCool);
+                    case nameof(TargetTemperatureCool):
+                        dic.Add("t_cool", this.TargetTemperatureCool);
                         break;
 
                     case nameof(Hold):
@@ -195,12 +245,12 @@ namespace RadioThermostat.Api.Models
         On = 2
     }
 
-    public enum TTypePosts
-    {
-        TemporaryTarget = 0,
-        AbsoluteTarget = 1,
-        Unknown = 2
-    }
+    //public enum TTypePosts
+    //{
+    //    TemporaryTarget = 0,
+    //    AbsoluteTarget = 1,
+    //    Unknown = 2
+    //}
 
     #endregion
 }
