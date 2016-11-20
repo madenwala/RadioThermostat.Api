@@ -1,1 +1,1 @@
-nuget pack RadioThermostat.Api.csproj
+nuget pack RadioThermostat.Api.csproj -Build -Properties Configuration=Release
