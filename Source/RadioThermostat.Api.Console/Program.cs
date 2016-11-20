@@ -17,7 +17,7 @@ namespace RadioThermostat.Api.TestConsole
         private static async Task Work()
         {
             CancellationTokenSource cts = new CancellationTokenSource();
-            var client = new ThermostatClient("24.1.143.169:101");
+            var client = new ThermostatClient("192.168.1.101");
 
             //Print(await client.GetName(cts.Token));
             //Print(await client.GetModelInfo(cts.Token));
