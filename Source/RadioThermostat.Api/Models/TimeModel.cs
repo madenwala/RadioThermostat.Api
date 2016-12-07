@@ -80,9 +80,8 @@ namespace RadioThermostat.Api.Models
 
         public DateTime AsDateTime()
         {
-            var dt = DateTime.Today;
-            dt.AddMinutes(this.TotalMinutes);
-            return dt;
+            var now = DateTime.Today;
+            return new DateTime(now.Year, now.Month, now.Day, this.Hour, this.Minute, 0);
         }
 
         #endregion
