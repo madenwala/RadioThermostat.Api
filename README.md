@@ -4,4 +4,4 @@ API for RadioThermostat for Windows 10 / Windows 8 / Windows Phone / .NET / ASP.
 ## NuGet
 You can install this API to your Visual Studio project through <a href="https://www.nuget.org/packages/RadioThermostat.API/">NuGet</a>.
 
-    ** PM > Install-Package RadioThermostat.API **
+    PM > Install-Package RadioThermostat.API
