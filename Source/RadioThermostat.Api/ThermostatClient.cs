@@ -52,9 +52,23 @@ namespace RadioThermostat.Api
             return await this.GetAsync<ProgramModel>("tstat/program/heat", ct);
         }
 
+        public async Task SetProgramHeat(ProgramModel program, CancellationToken ct)
+        {
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(program);
+            var content = new StringContent(json, Encoding.UTF8);
+            var response = await this.PostAsync<ThermostatResponse>("tstat/program/heat", ct, content);
+        }
+
         public async Task<ProgramModel> GetProgramCool(CancellationToken ct)
         {
             return await this.GetAsync<ProgramModel>("tstat/program/cool", ct);
+        }
+
+        public async Task SetProgramCool(ProgramModel program, CancellationToken ct)
+        {
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(program.GetChangedProperties());
+            var content = new StringContent(json, Encoding.UTF8);
+            var response = await this.PostAsync<ThermostatResponse>("tstat/program/cool", ct, content);
         }
 
         public async Task<ThermostatName> GetName(CancellationToken ct)

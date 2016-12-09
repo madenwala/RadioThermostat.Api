@@ -24,9 +24,9 @@ namespace RadioThermostat.Api.TestConsole
             //Print(await client.GetSystemInfo(cts.Token));
             //Print(await client.GetNetworkInfo(cts.Token));
 
-            var tstat1 = await client.GetThermostatStatus(cts.Token);
-            Print(tstat1);
-            
+            //var tstat1 = await client.GetThermostatStatus(cts.Token);
+            //Print(tstat1);
+
             //tstat1.Mode = ThermostatModes.Off;
             //tstat1.TargetTemporatureHeat = 71;
             //tstat1.FanOperatingMode = FanOperatingModes.Auto;
@@ -35,7 +35,17 @@ namespace RadioThermostat.Api.TestConsole
             //var tstat2 = await client.SetThermostatStatus(tstat1, cts.Token);
             //Print(tstat2);
 
-            //Print(await client.GetProgramHeat(cts.Token));
+            var h1 = await client.GetProgramHeat(cts.Token);
+            Print(h1);
+
+            h1[Days.Monday].Times[0] = h1[Days.Monday].Times[0].AddMinutes(-5);
+            h1[Days.Monday].Temps[0] = h1[Days.Monday].Temps[0] - 1;
+            await client.SetProgramHeat(h1, cts.Token);
+
+            var h2 = await client.GetProgramHeat(cts.Token);
+            Print(h2);
+
+
             //Print(await client.GetProgramCool(cts.Token));
         }
 
