@@ -38,7 +38,7 @@ namespace RadioThermostat.Api.TestConsole
             var h1 = await client.GetProgramHeat(cts.Token);
             Print(h1);
 
-            h1[Days.Monday].Times[0] = h1[Days.Monday].Times[0].AddMinutes(-5);
+            h1[Days.Monday].Times[0] = h1[Days.Monday].Times[0] - TimeSpan.FromMinutes(5);
             h1[Days.Monday].Temps[0] = h1[Days.Monday].Temps[0] - 1;
             await client.SetProgramHeat(h1, cts.Token);
 

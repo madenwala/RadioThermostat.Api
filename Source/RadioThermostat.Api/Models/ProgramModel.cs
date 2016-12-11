@@ -7,50 +7,50 @@ namespace RadioThermostat.Api.Models
 {
     public class ProgramDayModel : ObservableCollection<double>
     {
+        public Days Day { get; internal set; }
         public bool Is4Slot { get { return this.Count / 2 == 4; } }
         public bool Is7Slot { get { return this.Count / 2 == 7; } }
 
-        public ObservableCollection<DateTime> Times
+        public ObservableCollection<TimeSpan> Times
         {
             get
             {
-                var times = new ObservableCollection<DateTime>();
+                var spans = new ObservableCollection<TimeSpan>();
                 for (int i = 0; i < this.Count; i = i + 2)
-                {
-                    var now = DateTime.Now;
-                    var dt = new DateTime(now.Year, now.Month, now.Day, (int)Math.Floor(this[i] / 60), (int)this[i] % 60, 0);
-                    dt.AddMinutes(this[i]);
-                    times.Add(dt);
-                }
-                times.CollectionChanged += (o, e) =>
+                    spans.Add(TimeSpan.FromMinutes(this[i]));
+                spans.CollectionChanged += (o, e) =>
                 {
                     int index = 0;
-                    foreach (var time in times)
+                    foreach (var span in spans)
                     {
-                        this[index] = time.Hour * 60 + time.Minute;
+                        this[index] = span.TotalMinutes;
                         index = index + 2;
                     }
                 };
-                return times;
+                return spans;
             }
         }
 
+        private ObservableCollection<double> temps;
         public ObservableCollection<double> Temps
         {
             get
             {
-                var temps = new ObservableCollection<double>();
-                for (int i = 1; i < this.Count; i = i + 2)
-                    temps.Add(this[i]);
-                temps.CollectionChanged += (o, e) =>
+                if (temps == null)
                 {
-                    int index = 1;
-                    foreach (var temp in temps)
+                    temps = new ObservableCollection<double>();
+                    for (int i = 1; i < this.Count; i = i + 2)
+                        temps.Add(this[i]);
+                    temps.CollectionChanged += (o, e) =>
                     {
-                        this[index] = temp;
-                        index = index + 2;
-                    }
-                };
+                        int index = 1;
+                        foreach (var temp in temps)
+                        {
+                            this[index] = temp;
+                            index = index + 2;
+                        }
+                    };
+                }
                 return temps;
             }
         }
@@ -61,6 +61,23 @@ namespace RadioThermostat.Api.Models
         internal override Dictionary<string, object> GetChangedProperties()
         {
             return null;
+        }
+
+        [JsonIgnore()]
+        public ObservableCollection<ProgramDayModel> List
+        {
+            get
+            {
+                var list = new ObservableCollection<ProgramDayModel>();
+                list.Add(this.Monday);
+                list.Add(this.Tuesday);
+                list.Add(this.Wednesday);
+                list.Add(this.Thursday);
+                list.Add(this.Friday);
+                list.Add(this.Saturday);
+                list.Add(this.Sunday);
+                return list;
+            }
         }
 
         public ProgramDayModel this[int day]
@@ -94,7 +111,7 @@ namespace RadioThermostat.Api.Models
         public ProgramDayModel Monday
         {
             get { return _Monday; }
-            set { this.SetProperty(ref _Monday, value); }
+            set { this.SetProperty(ref _Monday, value); if(this.Monday != null) this.Monday.Day = Days.Monday; }
         }
 
         private ProgramDayModel _Tuesday;
@@ -102,7 +119,7 @@ namespace RadioThermostat.Api.Models
         public ProgramDayModel Tuesday
         {
             get { return _Tuesday; }
-            set { this.SetProperty(ref _Tuesday, value); }
+            set { this.SetProperty(ref _Tuesday, value); if (this.Tuesday != null) this.Tuesday.Day = Days.Tuesday; }
         }
 
         private ProgramDayModel _Wednesday;
@@ -110,7 +127,7 @@ namespace RadioThermostat.Api.Models
         public ProgramDayModel Wednesday
         {
             get { return _Wednesday; }
-            set { this.SetProperty(ref _Wednesday, value); }
+            set { this.SetProperty(ref _Wednesday, value); if (this.Wednesday != null) this.Wednesday.Day = Days.Wednesday; }
         }
 
         private ProgramDayModel _Thursday;
@@ -118,7 +135,7 @@ namespace RadioThermostat.Api.Models
         public ProgramDayModel Thursday
         {
             get { return _Thursday; }
-            set { this.SetProperty(ref _Thursday, value); }
+            set { this.SetProperty(ref _Thursday, value); if (this.Thursday != null) this.Thursday.Day = Days.Thursday; }
         }
 
         private ProgramDayModel _Friday;
@@ -126,7 +143,7 @@ namespace RadioThermostat.Api.Models
         public ProgramDayModel Friday
         {
             get { return _Friday; }
-            set { this.SetProperty(ref _Friday, value); }
+            set { this.SetProperty(ref _Friday, value); if (this.Friday != null) this.Friday.Day = Days.Friday; }
         }
 
         private ProgramDayModel _Saturday;
@@ -134,7 +151,7 @@ namespace RadioThermostat.Api.Models
         public ProgramDayModel Saturday
         {
             get { return _Saturday; }
-            set { this.SetProperty(ref _Saturday, value); }
+            set { this.SetProperty(ref _Saturday, value); if (this.Saturday != null) this.Saturday.Day = Days.Saturday; }
         }
 
         private ProgramDayModel _Sunday;
@@ -142,7 +159,7 @@ namespace RadioThermostat.Api.Models
         public ProgramDayModel Sunday
         {
             get { return _Sunday; }
-            set { this.SetProperty(ref _Sunday, value); }
+            set { this.SetProperty(ref _Sunday, value); if (this.Sunday != null) this.Sunday.Day = Days.Sunday; }
         }
     }
 }
