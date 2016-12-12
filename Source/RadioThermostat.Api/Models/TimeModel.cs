@@ -70,7 +70,8 @@ namespace RadioThermostat.Api.Models
 
         public override string ToString()
         {
-            return string.Format("{0} {1:00}:{2:00}", Day, Hour, Minute);
+            var dt = DateTime.Today + new TimeSpan(this.Hour, this.Minute, 0);
+            return string.Format("{0} {1:t}", Day, dt);
         }
 
         internal override Dictionary<string, object> GetChangedProperties()
