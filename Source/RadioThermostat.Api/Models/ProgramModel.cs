@@ -2,11 +2,23 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace RadioThermostat.Api.Models
 {
     public class ProgramDayModel : ObservableCollection<double>
     {
+        #region Events
+
+        /// <summary>
+        /// Multicast event for property change notifications.
+        /// </summary>
+        public new event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+
+        #region Properties
+
         public Days Day { get; internal set; }
         public bool Is4Slot { get { return this.Count / 2 == 4; } }
         public bool Is7Slot { get { return this.Count / 2 == 7; } }
@@ -54,6 +66,18 @@ namespace RadioThermostat.Api.Models
                 return temps;
             }
         }
+
+        #endregion
+
+        #region Methods
+
+        public void Refresh()
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Times)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temps)));
+        }
+
+        #endregion
     }
 
     public class ProgramModel : ModelBase
