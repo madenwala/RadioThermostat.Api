@@ -135,14 +135,12 @@ namespace RadioThermostat.Api.Models
         public bool IsFanAuto { get { return this.FanOperatingMode == FanOperatingModes.Auto; } set { if (value) this.FanOperatingMode = FanOperatingModes.Auto; } }
         public bool IsFanAutoCirculate { get { return this.FanOperatingMode == FanOperatingModes.AutoCirculate; } set { if (value) this.FanOperatingMode = FanOperatingModes.AutoCirculate; } }
         public bool IsFanOn { get { return this.FanOperatingMode == FanOperatingModes.On; } set { if (value) this.FanOperatingMode = FanOperatingModes.On; } }
-
-        #endregion
         
         public double TargetTemperature
         {
             get
             {
-                switch(this.Mode)
+                switch (this.Mode)
                 {
                     case ThermostatModes.Heat:
                         return this.TargetTemperatureHeat;
@@ -178,6 +176,8 @@ namespace RadioThermostat.Api.Models
                 }
             }
         }
+
+        #endregion
 
         #region Methods
 

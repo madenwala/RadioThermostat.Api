@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -23,58 +24,83 @@ namespace RadioThermostat.Api.Models
         public bool Is4Slot { get { return this.Count / 2 == 4; } }
         public bool Is7Slot { get { return this.Count / 2 == 7; } }
 
-        public ObservableCollection<TimeSpan> Times
+        internal ObservableCollection<TimeSpan> Times
         {
             get
             {
                 var spans = new ObservableCollection<TimeSpan>();
                 for (int i = 0; i < this.Count; i = i + 2)
                     spans.Add(TimeSpan.FromMinutes(this[i]));
-                spans.CollectionChanged += (o, e) =>
-                {
-                    int index = 0;
-                    foreach (var span in spans)
-                    {
-                        this[index] = span.TotalMinutes;
-                        index = index + 2;
-                    }
-                };
                 return spans;
             }
         }
-
-        private ObservableCollection<double> temps;
-        public ObservableCollection<double> Temps
+        
+        internal ObservableCollection<double> Temps
         {
             get
             {
-                if (temps == null)
-                {
-                    temps = new ObservableCollection<double>();
-                    for (int i = 1; i < this.Count; i = i + 2)
-                        temps.Add(this[i]);
-                    temps.CollectionChanged += (o, e) =>
-                    {
-                        int index = 1;
-                        foreach (var temp in temps)
-                        {
-                            this[index] = temp;
-                            index = index + 2;
-                        }
-                    };
-                }
+                var temps = new ObservableCollection<double>();
+                for (int i = 1; i < this.Count; i = i + 2)
+                    temps.Add(this[i]);
                 return temps;
             }
         }
+
+        public double Temp1 { get { return this[1]; } set { this[1] = value; } }
+        public double Temp2 { get { return this[3]; } set { this[3] = value; } }
+        public double Temp3 { get { return this[5]; } set { this[5] = value; } }
+        public double Temp4 { get { return this[7]; } set { this[7] = value; } }
+        public double Temp5 { get { return this[9]; } set { this[9] = value; } }
+        public double Temp6 { get { return this[11]; } set { this[11] = value; } }
+        public double Temp7 { get { return this[13]; } set { this[13] = value; } }
+
+        public TimeSpan Time1 { get { return TimeSpan.FromMinutes(this[0]); } set { if (this[0] != value.TotalMinutes) this[0] = value.TotalMinutes; } }
+        public TimeSpan Time2 { get { return TimeSpan.FromMinutes(this[2]); } set { if (this[2] != value.TotalMinutes) this[2] = value.TotalMinutes; } }
+        public TimeSpan Time3 { get { return TimeSpan.FromMinutes(this[4]); } set { if (this[4] != value.TotalMinutes) this[4] = value.TotalMinutes; } }
+        public TimeSpan Time4 { get { return TimeSpan.FromMinutes(this[6]); } set { if (this[6] != value.TotalMinutes) this[6] = value.TotalMinutes; } }
+        public TimeSpan Time5 { get { return TimeSpan.FromMinutes(this[8]); } set { if (this[8] != value.TotalMinutes) this[8] = value.TotalMinutes; } }
+        public TimeSpan Time6 { get { return TimeSpan.FromMinutes(this[10]); } set { if (this[10] != value.TotalMinutes) this[10] = value.TotalMinutes; } }
+        public TimeSpan Time7 { get { return TimeSpan.FromMinutes(this[12]); } set { if (this[12] != value.TotalMinutes) this[12] = value.TotalMinutes; } }
 
         #endregion
 
         #region Methods
 
-        public void Refresh()
+        public void UpdateProperties()
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Times)));
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temps)));
+
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temp1)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temp2)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temp3)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temp4)));
+
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Time1)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Time2)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Time3)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Time4)));
+
+            if (this.Is7Slot)
+            {
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temp5)));
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temp6)));
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temp7)));
+
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Time5)));
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Time6)));
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Time7)));
+            }
+        }
+
+        public void Copy(ProgramDayModel model)
+        {
+            if (this.Count == model?.Count)
+            {
+                for (int i = 0; i < model.Count; i++)
+                    this[i] = model[i];
+                this.UpdateProperties();
+            }
         }
 
         #endregion
@@ -82,10 +108,7 @@ namespace RadioThermostat.Api.Models
 
     public class ProgramModel : ModelBase
     {
-        internal override Dictionary<string, object> GetChangedProperties()
-        {
-            return null;
-        }
+        #region Properties
 
         [JsonIgnore()]
         public ObservableCollection<ProgramDayModel> List
@@ -104,7 +127,7 @@ namespace RadioThermostat.Api.Models
             }
         }
 
-        public ProgramDayModel this[int day]
+        private ProgramDayModel this[int day]
         {
             get
             {
@@ -122,7 +145,7 @@ namespace RadioThermostat.Api.Models
             }
         }
 
-        public ProgramDayModel this[Days day]
+        private ProgramDayModel this[Days day]
         {
             get
             {
@@ -185,5 +208,52 @@ namespace RadioThermostat.Api.Models
             get { return _Sunday; }
             set { this.SetProperty(ref _Sunday, value); if (this.Sunday != null) this.Sunday.Day = Days.Sunday; }
         }
+
+        #endregion
+
+        #region Methods
+
+        internal override Dictionary<string, object> GetChangedProperties()
+        {
+            return null;
+        }
+
+        public void CopyProgram(Days from, Days to)
+        {
+            var fromDay = this[from];
+            var toDay = this[to];
+            toDay.Copy(fromDay);
+        }
+
+        public Tuple<string, double> GetNextProgramChange(DateTime dt)
+        {
+            var pd = this.List.First(f => f.Day == DateTimeHelper.ConvertDateTimeDayOfWeek(dt.DayOfWeek));
+            var tsNow = new TimeSpan(dt.Hour, dt.Minute, 0);
+
+            if (pd != null && pd.Times.Last() < tsNow)
+            {
+                var index = (this.List.IndexOf(pd) + 1) % 7;
+                pd = this.List[index];
+            }
+
+            if (pd != null)
+            {
+                for (int i = 0; i < pd.Times.Count; i++)
+                {
+                    if (pd.Times[i] > tsNow)
+                        return new Tuple<string, double>(this.FormatTimeSpanToTime(pd.Times[i]), pd.Temps[i]);
+                }
+            }
+
+            return null;
+        }
+
+        private string FormatTimeSpanToTime(TimeSpan ts)
+        {
+            var dt = DateTime.Today + ts;
+            return dt.ToString("t");
+        }
+
+        #endregion
     }
 }
