@@ -5,6 +5,9 @@ namespace RadioThermostat.Api.Models
 {
     public class ThermostatModel
     {
+        /// <summary>
+        /// Gets or sets the model name of the thermostat
+        /// </summary>
         [JsonProperty("model")]
         public string Model { get; set; }
     }
